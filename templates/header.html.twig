@@ -1,0 +1,55 @@
+{% import _self as recursiveMacro %}
+{% macro recursivePage(page,locale,pageActive) %}
+    {% import _self as self %}
+    {% if page.remove == 0 %}
+
+        <li>
+            <img class="lazy point" data-src="{{ asset('img/point.svg') }}"/>
+            {% if page.url(locale) is not null%}
+                {% if page.prio == 0 and page.parent is null %}
+                    {% set link = path('homepage',{'_locale':locale}) %}
+                {% else %}
+                    {% set link = path('page',{'_locale':locale,'slug':page.url(locale).url}) %}
+                {% endif %}
+            {% endif %}
+
+            <a href="{{ link }}" class="{{ (page == pageActive) ? 'active' : '' }}{% if page.childs.count > 0 or page.elementTypes | length > 2 %} withsub{% endif %}">
+                {{  page.detail(locale).name}}
+            </a>
+            {% if page.childs |length %}
+                <ul class="sub_menu">
+
+
+                    {% for child in page.childs %}
+                        <a href="{{path('page',{'_locale':locale,'slug':page.url(locale).url})}}#{{ child.name }}"><li>{{  child.detail(locale).name}}</li></a>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if page.zones is not null and page.childs.count == 0 and page.parent == null %}
+                {% if page.elementTypes | length > 2 %}
+                    <ul class="sub_menu">
+                        {% for type in page.elementTypes %}
+                            <a href="{{path('page',{'_locale':locale,'slug':page.url(locale).url})}}#{{ type.name }}"><li>{{ type.title }}</li></a>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endif %}
+        </li>
+    {% endif %}
+{% endmacro %}
+
+<header>
+    <input type="checkbox" id="burger" name="burger"/>
+    <label class="burgerLabel" for="burger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </label>
+    <nav>
+        <ul>
+            {% for myPage in pages %}
+                {{ _self.recursivePage(myPage,locale,page) }}
+            {% endfor %}
+        </ul>   
+    </nav>
+</header>
