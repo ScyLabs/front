@@ -9,6 +9,14 @@ Le simple appel de cette commande initialisera des containers docker avec tout l
 ```bash
 make install
 ```
+Ensuite, si les containers ne sont pas lancé d'office (après un reboot par exemple)
+```bash
+make start
+```
+Et pour les couper, pour travailler sur un autre projet par exemple 
+```bash
+make down
+
 Si vous n'avez pas build essentials , vous pouvez lancer ces 5 commandes
 
 ```bash
