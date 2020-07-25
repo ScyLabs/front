@@ -18,7 +18,7 @@ $('.zone.contact_form').each(function () {
 
             form.find('input,textarea,select,button').prop('disabled',true);
 
-            $.edc.send(action, "POST", formData, function (e) {
+            $.scripts.send(action, "POST", formData, function (e) {
                 if (e.success) {
                     dealSuccess(form, e);
                 }
