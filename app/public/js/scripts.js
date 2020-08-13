@@ -195,7 +195,7 @@ var scripts = new Array() ;
 
 $(function() {
 
-    if($('.fa,.fab,.far,.fal').length)
+    if($('.fa,.fab,.far,.fal,.fas').length)
     {
         scriptLoader.add({src: root+"js/lib/fontawesome-pro/css/all.min.css",preload:true});
     }
@@ -246,7 +246,10 @@ $(function() {
     }
 
     $(window).on('load',function (e) {
-        $('.apparition.hide').apparition();
+        setTimeout(function(){
+            $('.apparition.hide').apparition();
+        },1500)
+        
     });
 
 

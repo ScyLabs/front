@@ -26,7 +26,8 @@ class BaseExtension extends AbstractExtension
         return array(
             new TwigFunction('fileName',array($this,'fileName')),
             new TwigFunction('fileGetContents',array($this,'fileGetContents')),
-            new TwigFunction('getFirstText',array($this,'getFirstText'))
+            new TwigFunction('getFirstText',array($this,'getFirstText')),
+            new TwigFunction('Link',[$this,'getLink'])
         );
     }
     public function fileName(AbstractFileLink $link,$locale) : string {
@@ -62,6 +63,24 @@ class BaseExtension extends AbstractExtension
                 return $text;
             }
         }
+    }
+
+    public function getLink(Page $page,string $locale) : ?string {
+        $url = $page->getUrl($locale);
+        if(null === $url)
+            return null;
+        if($page->getPrio() === 0 && null === $page->getParent()){
+            return $this->router->generate('homepage',[
+                '_locale'   =>  $locale
+            ]);
+        }else{
+            return $this->router->generate('page',[
+                '_locale'   =>  $locale,
+                'slug'      =>  $url->getUrl()
+            ]);
+        }
+        
+    
     }
 
 }

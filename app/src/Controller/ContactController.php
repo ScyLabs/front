@@ -11,26 +11,24 @@ namespace App\Controller;
 
 use App\Entity\ContactRequest;
 use App\Form\ContactForm;
-use App\Form\SponsorForm;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Mailjet\Client;
+use Mailjet\MailjetTest;
+use Mailjet\Resources;
 use ScyLabs\NeptuneBundle\Entity\Infos;
-use ScyLabs\NeptuneBundle\Entity\Page;
-use ScyLabs\NeptuneBundle\Entity\PageUrl;
-use ScyLabs\NeptuneBundle\Entity\Partner;
-use ScyLabs\NeptuneBundle\Entity\User;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class ContactController extends AbstractController
 {
@@ -49,7 +47,7 @@ class ContactController extends AbstractController
     /**
      * @Route("api/{_locale}/contact",name="api_contact",requirements={"_locale"="[a-z]{2}"})
      */
-    public function contact(Request $request, \Swift_Mailer $mailer){
+    public function contact(Request $request, \Swift_Mailer $mailer,Environment $twig){
 
 
         // Création du formulaire de contact
@@ -69,78 +67,69 @@ class ContactController extends AbstractController
             if($form->isValid()){
 
                 if(!empty($request->get('g-recaptcha-response')) || getenv('APP_ENV') == 'dev'){
-                    if($this->validateRecaptcha('6Le41GwUAAAAAH5xkR6Z6sDsoe17GYDyNQHJ0Pbh',$_POST['g-recaptcha-response']) === true || getenv('APP_ENV') === 'dev'){
+                    if($this->validateRecaptcha('6LfJJb0ZAAAAACQ_bR-alRp4KTgSABjQM5P0lsWx',$_POST['g-recaptcha-response']) === true || getenv('APP_ENV') === 'dev'){
 
                         $infos = $this->getDoctrine()->getRepository(Infos::class)->findOneBy(array());
                         if($infos === null){
                             throw new InvalidConfigurationException($this->trans('contact.errors.informations'));
                         }
-                        $from = (getenv('APP_ENV') === 'prod') ? 'noreply@'.str_replace('www.', '', $_SERVER['HTTP_HOST']) : 'web@e-corses.com';
+                        $from = (getenv('APP_ENV') === 'prod') ? 'noreply@'.str_replace('www.', '', $_SERVER['HTTP_HOST']) : 'noreply@scylabs.fr';
+
+                        $from = [
+                            "Email" =>  $from,
+                            "Name"  =>  sprintf("Contact - %s",$infos->getName())
+                        ];
+
+                        $publicKey = $_ENV['MAILJET_APIKEY_PUBLIC'] ?? '';
+                        $privateKey = $_ENV['MAILJET_APIKEY_PRIVATE'] ?? '';
+                        
+                        $mailer = new Client($publicKey,$privateKey,true,[
+                            'version'   =>  'v3.1'
+                        ]);
 
 
-                        $webmasterMail = (new \Swift_Message($this->trans('contact.oneRequest').$_SERVER['HTTP_HOST']))
-                            ->setFrom($from)
-                            ->setTo($infos->getMail())
-                            ->addReplyTo($contactRequest->getEmail())
-                            ->setBody(
-                                $this->get('templating')->render(
-                                    'api/mail/contact_webmaster.html.twig',
-                                    array(
-                                        'infos' => $infos,
-                                        'post'=> $_POST
+                        $messages = [
+                            "Messages"  =>  [
+                                [
+                                    "From"  =>  $from,
+                                    "To"    =>  [
+                                        [
+                                            "Email" =>  $infos->getMail(),
+                                            "Name"  =>  "Vous"
+                                        ] 
+                                    ],
+                                    "Subject"   =>  sprintf("%s : %s",$this->trans('contact.oneRequest'),$_SERVER['HTTP_HOST']),
+                                    "HTMLPart"  =>  $twig->render(
+                                        'api/mail/contact_webmaster.html.twig',
+                                        array(
+                                            'infos' => $infos,
+                                            'post'=> $_POST
 
+                                        )
                                     )
-                                )
-                                ,'text/html');
-
-
-
-
-                        if($this->has('parameter_bag')){
-                            $parameterBag = $this->get('parameter_bag');
-
-                            if($parameterBag->has('activeMimeTypes') && $parameterBag->has('activeExtensions')){
-
-                                foreach ($form as $val){
-                                    if(!$val instanceof FormInterface)
-                                        continue;
-                                    if(!($innerType = $val->getConfig()->getType()->getInnerType()) instanceof FileType)
-                                        continue;
-
-
-                                    if(null === $file  = $val->getData())
-                                        continue;
-                                    if(!$file instanceof UploadedFile)
-                                        continue;
-                                    if(
-                                        !in_array($file->guessExtension(),$this->getParameter('activeExtensions')) ||
-                                        !in_array($file->getMimeType(),$this->getParameter('activeMimeTypes'))
-                                    ) continue;
-
-
-                                    $attach = \Swift_Attachment::fromPath($file->getRealPath(), $file->getMimeType())
-                                        ->setFilename($file->getClientOriginalName());
-                                    $webmasterMail->attach($attach);
-
-                                }
-                            }
-                        }
-                        $mailer->send($webmasterMail);
-
-                        $mailer->send(
-                            (new \Swift_Message($this->trans('contact.yourRequest').' : '.$_SERVER['HTTP_HOST']))
-                                ->setFrom($from)
-                                ->setTo($contactRequest->getEmail())
-                                ->setBody(
-                                    $this->get('templating')->render(
+                                ],
+                                [
+                                    "From"  =>  $from,
+                                    "To"    =>  [
+                                        [
+                                            "Email" =>  $contactRequest->getEmail(),
+                                            "Name"  =>  sprintf("%s %s",$contactRequest->getFirstname(),$contactRequest->getName())
+                                        ]
+                                    ],
+                                    "Subject"   =>  sprintf("%s : %s",$this->trans('contact.yourRequest'),$_SERVER['HTTP_HOST']),
+                                    "HTMLPart"  =>  $twig->render(
                                         'api/mail/contact_client.html.twig',
                                         array(
                                             'infos' => $infos,
                                         )
                                     )
-                                    ,'text/html')
-                        );
-                        $contactRequest->setIp($_SERVER['REMOTE_ADDR']);
+                                ]
+                            ]
+                        ];
+                        $response = $mailer->post(Resources::$Email,[
+                            'body'  =>  $messages
+                        ]);
+                       
                         $entityManager = $this->getDoctrine()->getManager();
                         $entityManager->persist($contactRequest);
                         $entityManager->flush();
