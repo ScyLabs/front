@@ -1,0 +1,145 @@
+.zone.contact_form{
+    .containerLimit{
+        padding: 4rem 2rem;
+        position: relative;
+        overflow: hidden;
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.5;
+            background-image: radial-gradient(50% 112%, rgba(0, 0, 0, 0.00) 50%, #021438 100%);
+            z-index: 2;
+          }
+        .contact-text{
+            color: white;
+            padding-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+            max-width: 70rem;
+            margin: 0 auto;
+            .contact-title{
+                text-align: center;
+                padding-bottom: 2rem;
+            }
+            .contact-description{
+                text-align: center;
+            }
+        }
+        .contact-form{
+            position: relative;
+            z-index: 3;
+            max-width: 70rem;
+            margin: 0 auto;
+            form{
+                .form-group{
+                    padding-bottom: 2rem;
+                    div{
+                        label{
+                            display: none;
+                        }
+                        input{
+                            border-radius: 8px;
+                            padding: 1rem;
+                            width: 100%;
+                        }
+                        #contact_form_message{
+                            width: 100%;
+                            height: 12rem;
+                            border-radius: 8px;
+                            padding: 1rem;
+                        }
+                    }
+                    .g-recaptcha{
+                        margin-left: -1rem;
+                        transform: scale(0.9);
+
+                    }
+                    &:nth-child(6){
+                        div{
+                            display: flex;
+                            flex-direction: row-reverse;
+                            justify-content: flex-end;
+                            label{
+                                display: block;
+                                color: black;
+                            }
+                            input{
+                                width: fit-content;
+                                margin-top: 0.4rem;
+                                margin-right: 2rem;
+                                margin-left: 0.5rem;
+                            }
+                        }
+                    }
+                    &:nth-child(8){
+                        width: fit-content;
+                        padding-bottom: 4rem;
+                    }
+                }
+            }
+        }
+        .img{
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            z-index: 1;
+            .slide{
+                .photo{
+                    img{
+                        height: 146vh;
+                    }
+                }
+            }
+        }
+        .button-orange{
+            box-shadow: 0px 3px 12px 0px rgba(26, 29, 104, 0.25);
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            z-index: 3;
+        }
+    }
+}
+
+@media screen and (min-width: 550px){
+    .zone.contact_form{
+        .containerLimit{
+            .contact-form{
+                max-width: 90rem;
+                margin: 0 auto;
+                form{
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    .form-group{
+                        width: 100%;
+                        .g-recaptcha{
+                            transform: scale(1);
+                        }
+                        &:nth-child(1){
+                            width: 49%;
+                        }
+                        &:nth-child(2){
+                            width: 49%;
+                            margin-left: auto;
+                        }
+                        &:nth-child(6){
+                            div{
+                                justify-content: flex-end;
+                            }
+                        }
+                        &:nth-child(8){
+                            width: 100%;
+                            margin-left: 1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

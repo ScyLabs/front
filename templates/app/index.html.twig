@@ -1,0 +1,8 @@
+
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+  <div id="AppRoot" data-locale="{{ app.request.locale }}" data-appName="{{ appName }}"></div>
+  {{ encore_entry_script_tags('app') }}
+{% endblock content %}
+

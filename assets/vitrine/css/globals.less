@@ -1,0 +1,52 @@
+.title{
+    color: theme('colors.primary.medium');
+    font-weight: 200;
+    font-size: 3.2rem;
+    text-align: center;
+    span {
+        font-style: normal;
+        font-weight: 700;
+    }
+}
+.description{
+    width: 90%;
+    margin: auto;
+    font-size: 1.6rem;
+    text-align: justify;
+    padding-bottom: 2rem;
+    font-weight: 600;
+}
+
+/* Animations */
+
+[data-aos="left"] {
+    transition: all 1s ease-in;
+    clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);        
+    &.aos-animate{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+[data-aos="right"] {
+    transition: all 1s ease-in;
+    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+    &.aos-animate{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+[data-aos="top"] {
+    transition: all 1s ease-in;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); 
+    &.aos-animate{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+[data-aos="bot"] {
+    transition: all 1s ease-in;
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);     
+    &.aos-animate{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
