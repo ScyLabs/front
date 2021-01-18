@@ -1,2 +1,21 @@
-/docker/data
-/docker/logs
+###> symfony/framework-bundle ###
+/.docker/data/
+/.DS_Store
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+/**.DS_Store
+###< symfony/framework-bundle ###
+/public/uploads/
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+.vscode/settings.json

@@ -1,0 +1,172 @@
+.zone.diapo-fixe{
+    overflow: hidden;
+    position: relative;
+    .content_diapo::before{
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    .content_diapo {
+        position: relative;
+        height: 88vh;
+        .content{
+            position: absolute;
+            top: 50%;
+            left: 0;
+            z-index: 99;
+            color: white;
+            max-width: 44rem;
+            padding: 2rem 3rem 0 3rem;
+            transform: translate(0, -50%);
+            .title-diapo{
+                width: 20rem;
+                line-height: 1.5;
+                padding-bottom: 2rem;
+                font-weight: bold;
+            }
+            .desc{
+                padding: 2rem 0;
+            }
+            .container-button{
+                display: flex;
+                flex-direction: column;
+                padding: 2rem 0;
+                .button-orange{
+                    width: fit-content;
+                    margin: auto;
+                    margin-bottom: 1.5rem;
+                }
+                .button-blue{
+                    margin: auto;
+                    color: white;
+                    width: fit-content;
+                    i{
+                        margin-top: 0.4rem;
+                    }
+                }
+            }
+        }
+    
+        &::before {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0.5;
+          background-image: radial-gradient(50% 112%, rgba(0, 0, 0, 0.00) 50%, #021438 100%);
+          z-index: 8;
+        }
+    
+        display: flex;
+        overflow: hidden;
+    
+        .slide {
+          .photo {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            min-height: 690px;
+    
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+    
+        video {
+          flex: 1;
+          object-fit: cover;
+        }
+      }
+    
+
+    &.subtype2{
+        .content_diapo{
+            height: 75vh;
+            .photo {
+              height: 75vh;
+            }
+            .content{
+                padding: 2rem 2rem;
+                .title-diapo{
+                    text-align: center;
+                    margin: auto;
+                    width: 25rem;
+                }
+                .desc{
+                    text-align: center;
+                }
+                .container-button{
+                    display: none;
+                }
+            }
+        }
+    }
+}
+@media screen and (min-width: 420px){
+    .zone.diapo-fixe{
+        .content_diapo{
+            .content{
+                width: 44rem;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                .title-diapo{
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+    }    
+}
+@media screen and (min-width: 800px){
+    .zone.diapo-fixe{
+        .content_diapo{
+            .content{
+            width: 50rem;
+            max-width: 50rem;
+            left: 0%;
+            transform: translate(0, -50%);
+                .title-diapo{
+                    text-align: left;
+                }
+                .container-button{
+                    display: flex;
+                    flex-direction: row;
+                    .button-orange{
+                        margin-bottom: 0;
+                        margin-left: 0;
+                    }
+                }
+            }
+
+        }
+        &.subtype2{
+            .content_diapo{
+                height: 50vh;
+                .content{
+                    width: fit-content;
+                    max-width: 70rem;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50%, 15%);
+                    .title-diapo{
+                        width: fit-content;
+                        text-align: center;
+                    }
+                    .desc{
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }    
+}
