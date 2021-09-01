@@ -42,5 +42,5 @@ security:
         ROLE_ADMIN: ROLE_USER_VALIDATED
         ROLE_SUPER_ADMIN: [ROLE_ADMIN,ROLE_USER,ROLE_USER_VALIDATED,ROLE_ALLOWED_TO_SWITCH]
     access_control:
-        - { path: ^/admin-login, roles: IS_AUTHENTICATED_ANONYMOUSLY ,requires_channel: https}
-        - { path: ^/admin, roles: ROLE_ADMIN ,requires_channel: https}
+        - { path: ^/admin-login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
