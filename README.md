@@ -1,6 +1,20 @@
 # Neptune-front
 
+## Installation
 
+git clone front
+composer update -W ( force l'install des dépendances)
+remplir .env.local (DATABASE_URL=mysql://root:@127.0.0.1:3306/db)
+symfony console d:d:c (crée la bdd)
+symfony console d:s:u --force  (structure)
+symfony console d:f:l (données)
+symfony console a:i (installe les assets)
+
+copier dossier login/css → ajouter à public/css/login (ajouté sur le front Scylabs, à ne plus refaire par la suite)
+symfony console scylabs:neptune:create-admin (create admin)
+
+yarn install
+yarn watch
 
 ## Installation
 Pour l'installer facilement, il vous faut build-essentials et docker.
